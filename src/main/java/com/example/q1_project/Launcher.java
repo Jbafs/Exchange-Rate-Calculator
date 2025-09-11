@@ -14,13 +14,8 @@ public class Launcher {
         URLConnection urlc = url.openConnection();
 
         //use post mode
-        urlc.setDoOutput(true);
+        urlc.setDoOutput(false);
         urlc.setAllowUserInteraction(false);
-
-        //send query
-        PrintStream ps = new PrintStream(urlc.getOutputStream());
-        ps.print(query);
-        ps.close();
 
         //get result
         BufferedReader br = new BufferedReader(new InputStreamReader(urlc
