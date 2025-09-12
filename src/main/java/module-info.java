@@ -10,7 +10,8 @@ module com.example.q1_project {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires annotations;
 
-    opens com.example.q1_project to javafx.fxml;
-    exports com.example.q1_project;
+    opens com.q1_project.application to javafx.fxml;
+    exports com.q1_project.application;
 }
