@@ -2,13 +2,10 @@ package com.q1_project.application;
 
 import com.q1_project.frontend.CurrencyComboBox;
 import javafx.application.Application;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -84,6 +81,7 @@ public class TransactionApplication extends Application {
         TextFormatter<Double> onlyDoubles = new TextFormatter<>(converter, 0.0, filter);
         inputAmount = new TextField();
         inputAmount.setTextFormatter(onlyDoubles);
+        inputAmount.setOnAction((e)->updateOutput(TransactionApplication.words[1].indexOf(currencyComboBox2.getValue())));
         outputAmount = new Label("input num");
 
         GridPane root = (GridPane)scene.getRoot();

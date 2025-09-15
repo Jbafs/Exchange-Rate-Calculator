@@ -30,7 +30,7 @@ public class CurrencyComboBox extends ComboBox<String> {
     public void updateOptions(ActionEvent e){
         String curVal = getValue();
         int curIn = TransactionApplication.words[1].indexOf(curVal);
-        Collections.sort(list, Comparator.comparingInt(o -> o.compareTo(curVal)));
+        //Collections.sort(list, );
         if(curIn != -1)
             func.accept(curIn);
         else {
