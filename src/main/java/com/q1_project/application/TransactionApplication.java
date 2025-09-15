@@ -1,7 +1,10 @@
 package com.q1_project.application;
 
+import com.q1_project.frontend.CurrencyComboBox;
 import javafx.application.Application;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -27,8 +30,9 @@ public class TransactionApplication extends Application {
 
     HashMap<String,Double> currentPriceTransactions;
 
-    ComboBox<String> currencyComboBox1;
-    ComboBox<String> currencyComboBox2;
+    CurrencyComboBox currencyComboBox1;
+    CurrencyComboBox currencyComboBox2;
+    ObservableList<String> comboList;
 
     Pattern validEditingState = Pattern.compile("-?(([1-9][0-9]*)|0)?(\\.[0-9]*)?");
 
@@ -73,21 +77,14 @@ public class TransactionApplication extends Application {
         words = JsonManager.getJSONFrom("currencies.json");
         if(words==null)return;
 
-        currencyComboBox1 = new ComboBox<>(FXCollections.observableList(words[1]));
-        currencyComboBox2 = new ComboBox<>(FXCollections.observableList(words[1]));
-        currencyComboBox2.getSelectionModel().selectFirst();
-        currencyComboBox1.getSelectionModel().selectFirst();
-
-        currencyComboBox1.setOnAction(this::updateList);
-
+        comboList = FXCollections.observableList(words[1]);
+        currencyComboBox1 = new CurrencyComboBox(comboList,this::updateList);
+        currencyComboBox2 = new CurrencyComboBox(comboList,this::updateOutput);
 
         TextFormatter<Double> onlyDoubles = new TextFormatter<>(converter, 0.0, filter);
         inputAmount = new TextField();
         inputAmount.setTextFormatter(onlyDoubles);
         outputAmount = new Label("input num");
-
-        inputAmount.setOnAction(this::updateOutput);
-        currencyComboBox2.setOnAction(this::updateOutput);
 
         GridPane root = (GridPane)scene.getRoot();
 
@@ -107,12 +104,12 @@ public class TransactionApplication extends Application {
         stage.show();
     }
 
-    public void updateList(ActionEvent e){
-        currentPriceTransactions = JsonManager.getDoubleJSONFrom("currencies/"+words[0].get(words[1].indexOf(currencyComboBox1.getValue()))+".json");
-        updateOutput(e);
+    public void updateList(int in){
+        currentPriceTransactions = JsonManager.getDoubleJSONFrom("currencies/"+words[0].get(in)+".json");
+        updateOutput(in);
     }
 
-    public void updateOutput(ActionEvent e){
-        outputAmount.setText(Double.toString(Double.parseDouble(inputAmount.getText()) * currentPriceTransactions.get(words[0].get(words[1].indexOf(currencyComboBox2.getValue())))));
+    public void updateOutput(int in){
+        outputAmount.setText(Double.toString(Double.parseDouble(inputAmount.getText()) * currentPriceTransactions.get(words[0].get(in))));
     }
 }

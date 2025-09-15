@@ -11,6 +11,7 @@ module com.example.q1_project {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires annotations;
+    requires javafx.base;
 
     opens com.q1_project.application to javafx.fxml;
     exports com.q1_project.application;
