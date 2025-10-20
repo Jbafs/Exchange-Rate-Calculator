@@ -3,12 +3,15 @@ package com.q1_project.backend;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
-
+/**
+ * Interface with static methods to retrieve JSONs from the link
+ */
 public interface JsonManager {
     String useURL="https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/";
     String backUpURL = "https://latest.currency-api.pages.dev/v1/";
@@ -21,12 +24,12 @@ public interface JsonManager {
     static URLConnection getURLConnection(String endPoint){
         URLConnection ret;
         try {
-            ret = new URL(useURL+endPoint).openConnection();
-        } catch (IOException e) {
+            ret = new URI(useURL+endPoint).toURL().openConnection();
+        } catch (Exception e) {
             try {
-                ret = new URL(backUpURL + endPoint).openConnection();
-            } catch (IOException ex) {
-                System.out.println("END POINT BROKEN");
+                ret = new URI(backUpURL + endPoint).toURL().openConnection();
+            } catch (Exception ex) {
+                System.out.println("END POINT BROKEN"+ex);
                 return null;
             }
         }
@@ -44,12 +47,12 @@ public interface JsonManager {
         URLConnection urlc = getURLConnection(endPoint);
         try {
             if (urlc != null) br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
-            else throw new IOException();
         } catch (IOException e) {
-            System.out.println(e);
+            System.out.println(""+e);
             return null;
         }
 
+        assert br != null;
         return readJSON(br);
     }
 
@@ -59,32 +62,19 @@ public interface JsonManager {
      * @return hashmap or null if not available
      */
     static HashMap<String, Double> getDoubleJSONFrom(String endPoint){
-        BufferedReader br = null;
+        BufferedReader br;
         URLConnection urlc = getURLConnection(endPoint);
         try {
+            //get the buffered reader if possible
             if (urlc != null) br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
             else throw new IOException();
         } catch (IOException e) {
-            System.out.println(e);
+            System.out.println(""+e);
             return null;
         }
 
         return readJSONDouble(br);
     }
-
-    /**
-     * Get key from value you know in hashmap (for finding shortname from country in list)
-     * @param map map to search
-     * @param value value to search for
-     * @return key or null if not applicable
-     */
-    static String getKeyByValue(HashMap<String, String> map, String value) {
-        for (HashMap.Entry<String, String> entry : map.entrySet())
-            if (entry.getValue().equals(value)) // Use .equals() for object comparison
-                return entry.getKey();
-        return null; // Return null if the value is not found
-    }
-
 
     /**
      * Take in a buffered reader br that links to a JSON then read through it. Only works with JSONS
@@ -93,11 +83,10 @@ public interface JsonManager {
      * @return 2 String arraylists or null if not working
      */
     static ArrayList<String>[] readJSON(BufferedReader br){
-
-        String l = null;
+        String l;
         ArrayList<String>[] ret = new ArrayList[2];
-        ret[0] = new ArrayList<String>();
-        ret[1] = new ArrayList<String>();
+        ret[0] = new ArrayList<>();
+        ret[1] = new ArrayList<>();
 
         try{
             br.readLine();
@@ -122,7 +111,7 @@ public interface JsonManager {
             return null;
         }
         //return hash
-        System.out.println(ret);
+        System.out.println(Arrays.toString(ret));
         return ret;
     }
 
@@ -134,8 +123,8 @@ public interface JsonManager {
      */
     static HashMap<String, Double> readJSONDouble(BufferedReader br){
 
-        String l = null;
-        HashMap<String, Double> ret = new HashMap<String, Double>();
+        String l;
+        HashMap<String, Double> ret = new HashMap<>();
 
         try{
             br.readLine();

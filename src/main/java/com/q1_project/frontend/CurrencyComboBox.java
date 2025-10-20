@@ -8,8 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.function.Consumer;
 
 
@@ -17,6 +15,11 @@ public class CurrencyComboBox extends ComboBox<String> {
     ObservableList<String> list;
     Consumer<Integer> func;
 
+    /**
+     * Constructor
+     * @param a - set the list the combo box to be used
+     * @param f - function to be run on selection
+     */
     public CurrencyComboBox(ObservableList<String> a, Consumer<Integer> f){
         super(a);
         list = a;
@@ -33,8 +36,5 @@ public class CurrencyComboBox extends ComboBox<String> {
         //Collections.sort(list, );
         if(curIn != -1)
             func.accept(curIn);
-        else {
-
-        }
     }
 }
